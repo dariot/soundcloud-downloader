@@ -5,9 +5,9 @@ app.use('/', express.static(__dirname + '/public'));
 app.use('/about', express.static(__dirname + '/public/about'));
 
 app.post('/', function(req, res) {
-	console.log(req);
+    console.log(req);
 });
 
 var server = app.listen(3000, function() {
-	console.log('server started');
+    console.log('server started');
 });
