@@ -1,20 +1,23 @@
 var http = require('http');
 var fs = require('fs');
 
-var client_id = '';
+var config = require('./config');
+
+var client_id = config.client_id;
+var savePath = config.save_path;
 var url_song = 'martingarrix/martin-garrix-animals-original';
 
-function getMp3(location) {
+function getMp3(location, title) {
     location = location.replace('https', 'http');
     http.get(location, function(res) {
-        var file = fs.createWriteStream('prova.mp3');
+        var file = fs.createWriteStream(savePath + title + '.mp3');
         http.get(location, function(res) {
             res.pipe(file);
         });
     });
 }
 
-function stream(url) {
+function stream(url, title) {
     url = url.replace('https', 'http');
     url += '?client_id=' + client_id;
     http.get(url, function(res) {
@@ -24,7 +27,7 @@ function stream(url) {
         });
         res.on('end', function() {
             body = JSON.parse(body);
-            getMp3(body.location);
+            getMp3(body.location, title);
         });
     });
 }
@@ -38,7 +41,7 @@ function getById(location) {
         });
         res.on('end', function() {
             body = JSON.parse(body);
-            stream(body.stream_url);
+            stream(body.stream_url, body.title);
         });
     });
 }
